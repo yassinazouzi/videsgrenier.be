@@ -1,0 +1,39 @@
+# =====================================================================
+#  FILET DE SÉCURITÉ — racine du projet
+#
+#  Ce fichier ne sert QUE si le document root du domaine pointe sur la
+#  racine du projet au lieu de public/ (mauvaise configuration).
+#  Il redirige alors tout le trafic vers public/ et bloque l'accès
+#  direct au code source, au .env, à la base SQL, etc.
+#
+#  Configuration correcte à viser malgré tout, côté OVH :
+#    Espace client > Multisite > videsgrenier.be > Dossier racine
+#    = videgrenier/public
+#  Une fois ce réglage fait, ce fichier se retrouve hors du document
+#  root et n'est plus lu du tout — il ne gêne pas, il reste un filet.
+# =====================================================================
+
+# Jamais de listing de répertoire (c'est ce qui exposait tout le projet).
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Tout ce qui n'est pas déjà sous public/ y est renvoyé.
+    # Conséquence : /composer.json cherche public/composer.json → 404,
+    # le code source n'est donc plus téléchargeable.
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Double protection sur les fichiers les plus sensibles, au cas où
+# mod_rewrite serait indisponible.
+<FilesMatch "^(\.env.*|\.git.*|composer\.(json|lock)|package\.json|phpunit\.xml|artisan|vite\.config\.js|.*\.sql|.*\.md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
