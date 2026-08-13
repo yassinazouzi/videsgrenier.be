@@ -1,0 +1,19 @@
+# =====================================================================
+# À utiliser UNIQUEMENT si votre domaine OVH ne peut pas être pointé
+# directement sur le dossier /public (voir le guide de déploiement).
+#
+# Méthode préférée sur OVH : dans l'espace client, Multisite > Modifier
+# le domaine > "Dossier" = /videsgrenier/public. Dans ce cas, ignorez
+# ce fichier — il ne sert pas.
+#
+# Méthode de secours : si l'hébergement ne permet pas ce réglage,
+# renommez ce fichier en « .htaccess » et placez-le à LA RACINE de
+# l'hébergement (au même niveau que le dossier /videsgrenier), pas
+# dans /videsgrenier lui-même.
+# =====================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ videsgrenier/public/ [L]
+    RewriteRule (.*) videsgrenier/public/$1 [L]
+</IfModule>

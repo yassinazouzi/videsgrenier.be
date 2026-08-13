@@ -1,0 +1,422 @@
+/* =====================================================================
+   VIDESGRENIER.BE — DESIGN SYSTEM
+   Service de vide-grenier / débarras à Bruxelles
+   Un seul fichier : site public (clair) + back-office (sombre) + WhatsApp
+   Palette « étiquette de brocante » : cobalt + jaune prix + encre
+   ===================================================================== */
+
+/* ------------------------------------------------------------------ *
+ * 1. TOKENS
+ * ------------------------------------------------------------------ */
+:root{
+  --papier:#F6F5F1; --encre:#151412; --cobalt:#2438C8; --cobalt-fonce:#1B2A96;
+  --etiquette:#FFDE39; --vert:#1E6B45; --rouge:#D5352C; --ambre:#D8B903;
+  --gris:#6E6A61; --gris-clair:#9B968C; --ligne:#DEDBD2; --blanc:#FFFFFF;
+  --wa:#25D366;
+
+  /* Back-office — thème sombre par défaut, voir section 19 pour le mode clair */
+  --bo-fond:#12141C; --bo-panneau:#1A1D28; --bo-panneau-2:#232735; --bo-ligne:#2E3242;
+  --bo-texte:#E6E8EF; --bo-texte-2:#9AA0B4; --bo-texte-fort:#FFFFFF; --bo-hover:#2C3142;
+  --bo-succes:#3FD07E; --bo-succes-ligne:#2E7D50;
+  --bo-danger:#FF6B61; --bo-danger-ligne:#8A2A24;
+  --bo-badge-nouveau:#8B9BFF; --bo-badge-nouveau-ligne:#3346C8; --bo-badge-nouveau-fond:rgba(36,56,200,.16);
+  --bo-badge-contacte:#E9C93B; --bo-badge-contacte-ligne:#8A7500; --bo-badge-contacte-fond:rgba(216,185,3,.14);
+  --bo-badge-gagne:#3FD07E; --bo-badge-gagne-ligne:#2E7D50; --bo-badge-gagne-fond:rgba(63,208,126,.12);
+  --bo-badge-perdu:#FF6B61; --bo-badge-perdu-ligne:#8A2A24; --bo-badge-perdu-fond:rgba(213,53,44,.12);
+
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --r-sm:8px; --r:14px; --r-lg:20px; --r-pill:999px;
+  --e-2:8px; --e-3:12px; --e-4:16px; --e-5:20px; --e-6:24px; --e-8:32px; --e-12:52px;
+  --ombre-dure:0 4px 0 rgba(21,20,18,.85);
+  --ombre-douce:0 6px 0 rgba(21,20,18,.12);
+  --tr:.15s ease;
+  --contenu:1180px;
+}
+
+/* ------------------------------------------------------------------ *
+ * 2. RESET
+ * ------------------------------------------------------------------ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--papier);color:var(--encre);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,svg{max-width:100%;display:block}
+ul{list-style:none}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ------------------------------------------------------------------ *
+ * 3. TYPOGRAPHIE
+ * ------------------------------------------------------------------ */
+h1,h2,h3,h4{font-family:var(--display);letter-spacing:-.015em;line-height:1.08}
+h1{font-weight:800;font-size:clamp(38px,6vw,66px);line-height:.99;letter-spacing:-.02em}
+h2{font-weight:800;font-size:clamp(28px,4vw,40px)}
+h3{font-weight:600;font-size:19px}
+.eyebrow{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--cobalt);letter-spacing:.08em;text-transform:uppercase}
+.mono{font-family:var(--mono)}
+.muet{color:var(--gris)}
+
+/* ------------------------------------------------------------------ *
+ * 4. BOUTONS
+ * ------------------------------------------------------------------ */
+.btn{display:inline-flex;align-items:center;gap:var(--e-2);font-weight:600;font-size:15px;padding:11px 20px;border-radius:var(--r-pill);border:1.5px solid var(--encre);background:var(--blanc);color:var(--encre);transition:transform var(--tr),box-shadow var(--tr),background var(--tr)}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--ombre-dure)}
+.btn-plein{background:var(--encre);color:#fff}
+.btn-cobalt{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.btn-cobalt:hover{background:var(--cobalt-fonce)}
+.btn-jaune{background:var(--etiquette);border-color:var(--encre);color:var(--encre)}
+.btn-bloc{width:100%;justify-content:center}
+
+/* ------------------------------------------------------------------ *
+ * 5. LAYOUT
+ * ------------------------------------------------------------------ */
+.contenu{max-width:var(--contenu);margin:0 auto;padding:0 20px}
+.section{max-width:var(--contenu);margin:0 auto;padding:var(--e-12) 20px}
+.tete{text-align:center;max-width:640px;margin:0 auto 38px}
+.tete h2{margin-top:10px}
+.tete p{color:var(--gris);margin-top:12px;font-size:17px}
+
+/* ------------------------------------------------------------------ *
+ * 6. BANDEAU + HEADER
+ * ------------------------------------------------------------------ */
+.bandeau{background:var(--cobalt);color:#fff;font-family:var(--mono);font-size:12.5px;text-align:center;padding:8px 16px}
+.bandeau strong{color:var(--etiquette);font-weight:600}
+header{position:sticky;top:0;z-index:50;background:rgba(246,245,241,.92);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--encre)}
+.header-inner{max-width:var(--contenu);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:16px}
+.logo{font-family:var(--display);font-weight:800;font-size:23px}
+.logo span{color:var(--cobalt)}
+.nav-desktop{display:flex;gap:24px;font-weight:500;font-size:15px}
+.nav-desktop a{padding:4px 0;border-bottom:2px solid transparent;transition:border-color var(--tr)}
+.nav-desktop a:hover{border-color:var(--cobalt)}
+.header-tel{font-family:var(--mono);font-weight:600;font-size:15px;color:var(--cobalt)}
+
+/* ------------------------------------------------------------------ *
+ * 7. HERO + CARTE DEVIS
+ * ------------------------------------------------------------------ */
+.hero-section{position:relative;overflow:hidden;isolation:isolate}
+.hero-fond{position:absolute;inset:0;z-index:0;background:linear-gradient(120deg,var(--cobalt),var(--cobalt-fonce),var(--encre));background-size:250% 250%;animation:hero-degrade 16s ease-in-out infinite}
+.hero-fond::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(21,20,18,.42),rgba(21,20,18,.58));z-index:1}
+.hero-fond-image{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;animation-name:hero-diapo;animation-timing-function:ease-in-out;animation-iteration-count:infinite;animation-fill-mode:backwards}
+.hero-fond-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-fond-youtube{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-fond-youtube iframe{position:absolute;top:50%;left:50%;width:177.78vh;height:56.25vw;min-width:100%;min-height:100%;transform:translate(-50%,-50%);border:0}
+@keyframes hero-degrade{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@media (prefers-reduced-motion:reduce){
+  .hero-fond{animation:none}
+  .hero-fond-image{animation:none;opacity:1}
+}
+
+.hero{position:relative;z-index:2;max-width:var(--contenu);margin:0 auto;padding:64px 20px 52px;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+.hero h1{color:#fff}
+.hero h1 em{font-style:normal;color:var(--etiquette)}
+.hero .eyebrow{color:var(--etiquette)}
+.hero-sub{margin-top:18px;font-size:18.5px;color:rgba(255,255,255,.88);max-width:520px}
+.hero-sub strong{color:#fff}
+.hero-points{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px}
+.hero-point{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;font-weight:500;background:var(--blanc);border:1.5px solid var(--encre);border-radius:var(--r-pill);padding:7px 14px}
+.hero-point .p{color:var(--vert);font-weight:700}
+.hero-cta{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}
+
+.devis-carte{background:var(--blanc);border:1.5px solid var(--encre);border-radius:var(--r-lg);padding:26px;box-shadow:var(--ombre-douce);position:relative}
+.devis-carte::before{content:"Devis gratuit 24h";position:absolute;top:-14px;right:22px;background:var(--etiquette);border:1.5px solid var(--encre);border-radius:8px;padding:5px 13px;font-family:var(--mono);font-size:12px;font-weight:600;transform:rotate(3deg)}
+.devis-carte h2{font-size:22px;margin-bottom:4px}
+.devis-carte > p{font-size:14px;color:var(--gris);margin-bottom:18px}
+
+/* ------------------------------------------------------------------ *
+ * 8. CHAMPS DE FORMULAIRE
+ * ------------------------------------------------------------------ */
+.champ{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.champ label{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--gris)}
+.champ input,.champ select,.champ textarea{border:1.5px solid var(--encre);background:var(--papier);border-radius:10px;padding:11px 13px;font-family:var(--body);font-size:15px;color:var(--encre);outline:none;transition:border-color var(--tr),box-shadow var(--tr)}
+.champ input:focus,.champ select:focus,.champ textarea:focus{border-color:var(--cobalt);box-shadow:0 0 0 3px rgba(36,56,200,.14);background:var(--blanc)}
+.champ textarea{resize:vertical;min-height:70px}
+.champ-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ------------------------------------------------------------------ *
+ * 9. SERVICES
+ * ------------------------------------------------------------------ */
+.grille-services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.service{background:var(--blanc);border:1.5px solid var(--encre);border-radius:var(--r);padding:24px;transition:transform var(--tr),box-shadow var(--tr)}
+.service:hover{transform:translateY(-3px);box-shadow:var(--ombre-dure)}
+.service .ic{width:48px;height:48px;border-radius:12px;background:var(--etiquette);border:1.5px solid var(--encre);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.service h3{margin-bottom:8px}
+.service p{font-size:14.5px;color:var(--gris)}
+
+/* ------------------------------------------------------------------ *
+ * 10. ÉTAPES (bande sombre, numérotée)
+ * ------------------------------------------------------------------ */
+.etapes{background:var(--encre);color:var(--papier)}
+.etapes-inner{max-width:var(--contenu);margin:0 auto;padding:var(--e-12) 20px}
+.etapes .tete h2{color:#fff}
+.etapes .tete .eyebrow{color:var(--etiquette)}
+.etapes .tete p{color:#B8B4AA}
+.grille-etapes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:et}
+.etape{border:1.5px solid #4A4740;border-radius:var(--r);padding:26px 24px;position:relative}
+.etape::before{counter-increment:et;content:counter(et);position:absolute;top:-18px;left:22px;width:38px;height:38px;background:var(--cobalt);color:#fff;border:1.5px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:18px}
+.etape h3{color:#fff;margin:8px 0}
+.etape p{color:#B8B4AA;font-size:14.5px}
+
+/* ------------------------------------------------------------------ *
+ * 11. RÉALISATIONS (avant / après)
+ * ------------------------------------------------------------------ */
+.grille-real{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.real{border:1.5px solid var(--encre);border-radius:var(--r);overflow:hidden;background:var(--blanc)}
+.real .paire{display:grid;grid-template-columns:1fr 1fr;height:180px}
+.real .av,.real .ap{position:relative;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:600;background-size:cover;background-position:center}
+.real .av{background-color:#E9E5DC;color:#8A8578}
+.real .ap{background-color:#DCE6F5;color:var(--cobalt)}
+.real .av::after,.real .ap::after{position:absolute;top:8px;left:8px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:2px 7px;border-radius:6px;border:1px solid currentColor;background:rgba(255,255,255,.7)}
+.real .av::after{content:"AVANT"}
+.real .ap::after{content:"APRÈS"}
+.real .leg{padding:14px 16px;font-size:14px}
+.real .leg strong{font-family:var(--display)}
+.real .leg span{color:var(--gris);font-size:13px}
+
+/* ------------------------------------------------------------------ *
+ * 12. ZONE (communes de Bruxelles)
+ * ------------------------------------------------------------------ */
+.zone{background:var(--blanc);border:1.5px solid var(--encre);border-radius:var(--r-lg);padding:36px 40px;display:grid;grid-template-columns:1fr 1.1fr;gap:36px;align-items:center}
+.zone h2{font-size:clamp(26px,3.5vw,34px)}
+.zone p{color:var(--gris);margin-top:12px}
+.communes{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.commune{font-family:var(--mono);font-size:12.5px;background:var(--papier);border:1.5px solid var(--ligne);border-radius:var(--r-pill);padding:6px 12px;transition:background var(--tr),color var(--tr)}
+a.commune:hover{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+
+/* ------------------------------------------------------------------ *
+ * 13. ATOUTS (chiffres clés)
+ * ------------------------------------------------------------------ */
+.grille-atouts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.atout{text-align:center;padding:20px}
+.atout .n{font-family:var(--display);font-weight:800;font-size:38px;color:var(--cobalt)}
+.atout .l{font-weight:600;margin-top:4px}
+.atout .d{font-size:14px;color:var(--gris);margin-top:4px}
+
+/* ------------------------------------------------------------------ *
+ * 14. TÉMOIGNAGES
+ * ------------------------------------------------------------------ */
+.grille-temo{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.temo{background:var(--blanc);border:1.5px solid var(--encre);border-radius:var(--r);padding:22px}
+.temo .etoiles{color:var(--etiquette);font-size:15px;letter-spacing:2px;-webkit-text-stroke:.5px var(--encre)}
+.temo p{margin:12px 0 16px;font-size:15px}
+.temo .qui{font-family:var(--mono);font-size:12.5px;color:var(--gris)}
+.temo .qui strong{color:var(--encre);font-family:var(--body)}
+
+/* ------------------------------------------------------------------ *
+ * 14b. CORPS D'ARTICLE (blog) — le reset (section 2) met tout à zéro,
+ * ces règles redonnent la respiration typographique nécessaire aux
+ * balises sémantiques (h2/h3/ul) écrites dans l'admin.
+ * ------------------------------------------------------------------ */
+.article-corps{max-width:760px;margin:0 auto;font-size:17px;line-height:1.7}
+.article-corps p{margin-bottom:20px;color:var(--encre)}
+.article-corps h2{font-size:clamp(22px,3vw,28px);margin:40px 0 16px}
+.article-corps h3{margin:28px 0 12px}
+.article-corps ul{list-style:disc;padding-left:22px;margin-bottom:20px}
+.article-corps li{margin-bottom:8px}
+.article-corps strong{font-weight:700}
+.article-corps a{color:var(--cobalt);text-decoration:underline}
+
+/* ------------------------------------------------------------------ *
+ * 15. FAQ (AEO)
+ * ------------------------------------------------------------------ */
+.faq{max-width:820px}
+.q{border:1.5px solid var(--encre);border-radius:12px;background:var(--blanc);margin-bottom:12px;overflow:hidden}
+.q summary{padding:18px 20px;font-family:var(--display);font-weight:600;font-size:17px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.q summary::-webkit-details-marker{display:none}
+.q summary::after{content:"+";font-family:var(--mono);font-size:22px;color:var(--cobalt);transition:transform var(--tr)}
+.q[open] summary::after{transform:rotate(45deg)}
+.q .rep{padding:0 20px 18px;color:var(--gris);font-size:15px}
+
+/* ------------------------------------------------------------------ *
+ * 16. CTA FINAL
+ * ------------------------------------------------------------------ */
+.cta{background:var(--cobalt);color:#fff;border-radius:var(--r-lg);padding:48px 40px;text-align:center;position:relative;overflow:hidden}
+.cta::after{content:"GRATUIT";position:absolute;right:-40px;top:28px;background:var(--etiquette);color:var(--encre);font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.12em;padding:7px 52px;transform:rotate(35deg);border-top:1.5px solid var(--encre);border-bottom:1.5px solid var(--encre)}
+.cta h2{color:#fff}
+.cta p{color:#C9D0F5;margin:12px auto 26px;max-width:520px;font-size:17px}
+.cta .btn{background:var(--etiquette);border-color:var(--encre);color:var(--encre)}
+
+/* ------------------------------------------------------------------ *
+ * 17. FOOTER
+ * ------------------------------------------------------------------ */
+footer{background:var(--encre);color:#B8B4AA;font-size:14px;margin-top:44px}
+.footer-inner{max-width:var(--contenu);margin:0 auto;padding:52px 20px 28px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px}
+footer .logo{color:#fff;margin-bottom:12px}
+footer h4{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--etiquette);margin-bottom:14px}
+footer li{margin-bottom:9px}
+footer a:hover{color:#fff;text-decoration:underline}
+.footer-bas{border-top:1px solid #3A3833;max-width:var(--contenu);margin:0 auto;padding:18px 20px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
+.footer-reseaux{display:flex;gap:10px;margin-top:18px}
+.footer-reseaux a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;transition:background var(--tr),transform var(--tr)}
+.footer-reseaux a:hover{background:var(--cobalt);transform:translateY(-2px);text-decoration:none}
+
+/* ------------------------------------------------------------------ *
+ * 18. BULLE WHATSAPP (site public)
+ * ------------------------------------------------------------------ */
+.wa-bulle{position:fixed;right:22px;bottom:22px;z-index:90;width:60px;height:60px;border-radius:50%;background:var(--wa);border:2px solid var(--encre);box-shadow:0 4px 0 rgba(21,20,18,.6),0 8px 20px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;transition:transform var(--tr)}
+.wa-bulle:hover{transform:scale(1.06)}
+.wa-bulle svg{width:32px;height:32px;fill:#fff}
+.wa-bulle .ping{position:absolute;inset:0;border-radius:50%;background:var(--wa);opacity:.5;z-index:-1}
+@media (prefers-reduced-motion:no-preference){.wa-bulle .ping{animation:wa-ping 2.2s ease-out infinite}}
+@keyframes wa-ping{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.75);opacity:0}}
+.wa-infobulle{position:fixed;right:92px;bottom:32px;z-index:90;background:var(--blanc);border:1.5px solid var(--encre);border-radius:12px;padding:11px 15px;max-width:230px;font-size:14px;box-shadow:var(--ombre-douce)}
+.wa-infobulle strong{display:block;font-family:var(--display);margin-bottom:2px}
+.wa-infobulle .fermer{position:absolute;top:-9px;right:-9px;width:22px;height:22px;border-radius:50%;background:var(--encre);color:#fff;border:none;font-size:13px;line-height:1}
+
+/* ------------------------------------------------------------------ *
+ * 18b. BANDEAU COOKIES (RGPD)
+ * ------------------------------------------------------------------ */
+.cookies{position:fixed;left:22px;bottom:22px;z-index:95;max-width:420px;background:var(--blanc);border:1.5px solid var(--encre);border-radius:var(--r);padding:18px 20px;box-shadow:var(--ombre-dure)}
+.cookies[hidden]{display:none}
+.cookies-texte strong{font-family:var(--display);font-size:16px}
+.cookies-texte p{font-size:13.5px;color:var(--gris);margin-top:6px}
+.cookies-actions{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.cookies-actions .btn{font-size:14px;padding:8px 16px}
+
+/* ================================================================== *
+ * 19. BACK-OFFICE / DASHBOARD ADMIN (thème sombre)
+ * ================================================================== */
+.bo{background:var(--bo-fond);color:var(--bo-texte);min-height:100vh;display:grid;grid-template-columns:248px 1fr}
+.bo-sidebar{background:var(--bo-panneau);border-right:1px solid var(--bo-ligne);padding:20px 14px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.bo-logo{font-family:var(--display);font-weight:800;font-size:20px;color:var(--bo-texte-fort);padding:6px 12px 18px}
+.bo-logo span{color:var(--etiquette)}
+.bo-nav-titre{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--bo-texte-2);padding:16px 12px 6px}
+.bo-lien{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:var(--bo-texte-2);font-weight:500;font-size:14.5px;transition:background var(--tr),color var(--tr)}
+.bo-lien:hover{background:var(--bo-panneau-2);color:var(--bo-texte)}
+.bo-lien.actif{background:var(--cobalt);color:#fff}
+.bo-lien .pastille{margin-left:auto;background:var(--rouge);color:#fff;font-family:var(--mono);font-size:11px;font-weight:600;padding:1px 7px;border-radius:var(--r-pill)}
+
+.bo-main{padding:24px 32px}
+.bo-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.bo-titre{font-family:var(--display);font-weight:800;font-size:26px;color:var(--bo-texte-fort)}
+
+.bo-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.bo-kpi{background:var(--bo-panneau);border:1px solid var(--bo-ligne);border-radius:var(--r);padding:18px 20px}
+.bo-kpi .label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--bo-texte-2)}
+.bo-kpi .valeur{font-family:var(--display);font-weight:800;font-size:32px;color:var(--bo-texte-fort);margin-top:6px}
+.bo-kpi .delta{font-family:var(--mono);font-size:12px;margin-top:4px}
+.bo-kpi .delta.up{color:var(--bo-succes)}
+.bo-kpi .delta.down{color:var(--bo-danger)}
+
+.bo-cols{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.bo-panneau{background:var(--bo-panneau);border:1px solid var(--bo-ligne);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.bo-panneau-tete{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.bo-panneau-tete h3{color:var(--bo-texte-fort);font-size:17px}
+.bo-panneau.succes{border-color:var(--bo-succes-ligne);color:var(--bo-succes)}
+.bo-panneau.erreur{border-color:var(--bo-danger-ligne);color:var(--bo-danger)}
+.bo-texte-erreur{color:var(--bo-danger)}
+
+.bo-table{width:100%;border-collapse:collapse;font-size:14px}
+.bo-table th{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--bo-texte-2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--bo-ligne)}
+.bo-table td{padding:12px;border-bottom:1px solid var(--bo-ligne);color:var(--bo-texte)}
+.bo-table tr:last-child td{border-bottom:none}
+.bo-table tr:hover td{background:var(--bo-panneau-2)}
+.bo-table .titre-cell{font-weight:600;color:var(--bo-texte-fort)}
+.bo-table .sous{font-family:var(--mono);font-size:12px;color:var(--bo-texte-2)}
+
+.bo-btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;padding:9px 16px;border-radius:10px;border:1px solid var(--bo-ligne);background:var(--bo-panneau-2);color:var(--bo-texte);transition:background var(--tr)}
+.bo-btn:hover{background:var(--bo-hover)}
+.bo-btn-cobalt{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.bo-btn-cobalt:hover{background:var(--cobalt-fonce)}
+.bo-btn-danger{border-color:var(--bo-danger-ligne);color:var(--bo-danger)}
+.bo-btn-sm{padding:6px 12px;font-size:13px}
+
+.bo-champ{margin-bottom:16px}
+.bo-champ label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--bo-texte-2);margin-bottom:6px}
+.bo-champ input,.bo-champ select,.bo-champ textarea{width:100%;background:var(--bo-fond);border:1px solid var(--bo-ligne);border-radius:10px;padding:11px 14px;color:var(--bo-texte);font-family:var(--body);font-size:14.5px;outline:none}
+.bo-champ input:focus,.bo-champ textarea:focus{border-color:var(--cobalt)}
+
+/* Badges statut (devis, publication) */
+.badge{font-family:var(--mono);font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;border:1px solid var(--bo-ligne);white-space:nowrap}
+.badge-nouveau{background:var(--bo-badge-nouveau-fond);border-color:var(--bo-badge-nouveau-ligne);color:var(--bo-badge-nouveau)}
+.badge-contacte{background:var(--bo-badge-contacte-fond);border-color:var(--bo-badge-contacte-ligne);color:var(--bo-badge-contacte)}
+.badge-gagne,.badge-publie{background:var(--bo-badge-gagne-fond);border-color:var(--bo-badge-gagne-ligne);color:var(--bo-badge-gagne)}
+.badge-perdu,.badge-refuse{background:var(--bo-badge-perdu-fond);border-color:var(--bo-badge-perdu-ligne);color:var(--bo-badge-perdu)}
+
+/* Interrupteur (toggle) — ex. bulle WhatsApp on/off */
+.bo-toggle{position:relative;width:46px;height:26px;flex-shrink:0;display:inline-block}
+.bo-toggle input{opacity:0;width:0;height:0}
+.bo-toggle .piste{position:absolute;inset:0;background:var(--bo-ligne);border-radius:var(--r-pill);transition:background var(--tr);cursor:pointer}
+.bo-toggle .piste::before{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform var(--tr)}
+.bo-toggle input:checked + .piste{background:var(--wa)}
+.bo-toggle input:checked + .piste::before{transform:translateX(20px)}
+
+/* ------------------------------------------------------------------ *
+ * 19b. MODE CLAIR DU BACK-OFFICE
+ * L'attribut data-theme est posé sur <html> par un script inline dans
+ * le <head> de admin/layout.blade.php, avant le premier rendu, pour
+ * éviter un flash sombre→clair au chargement.
+ * ------------------------------------------------------------------ */
+html[data-theme="light"]{
+  --bo-fond:var(--papier); --bo-panneau:#FFFFFF; --bo-panneau-2:#EEEBE1; --bo-ligne:var(--ligne);
+  --bo-texte:var(--encre); --bo-texte-2:var(--gris); --bo-texte-fort:var(--encre); --bo-hover:#E4E0D3;
+  --bo-succes:#1E6B45; --bo-succes-ligne:#1E6B45;
+  --bo-danger:#B23026; --bo-danger-ligne:#B23026;
+  --bo-badge-nouveau:#2438C8; --bo-badge-nouveau-ligne:#2438C8; --bo-badge-nouveau-fond:rgba(36,56,200,.09);
+  --bo-badge-contacte:#8A7500; --bo-badge-contacte-ligne:#8A7500; --bo-badge-contacte-fond:rgba(216,185,3,.16);
+  --bo-badge-gagne:#1E6B45; --bo-badge-gagne-ligne:#1E6B45; --bo-badge-gagne-fond:rgba(30,107,69,.10);
+  --bo-badge-perdu:#B23026; --bo-badge-perdu-ligne:#B23026; --bo-badge-perdu-fond:rgba(213,53,44,.09);
+}
+html[data-theme="light"] .bo{box-shadow:none}
+html[data-theme="light"] .bo-sidebar{box-shadow:1px 0 0 var(--bo-ligne)}
+
+/* Bouton bascule sombre/clair, dans la topbar admin */
+.bo-theme-toggle{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;padding:9px 14px;border-radius:10px;border:1px solid var(--bo-ligne);background:var(--bo-panneau-2);color:var(--bo-texte);transition:background var(--tr)}
+.bo-theme-toggle:hover{background:var(--bo-hover)}
+.bo-theme-toggle .icone-sombre{display:inline}
+.bo-theme-toggle .icone-clair{display:none}
+html[data-theme="light"] .bo-theme-toggle .icone-sombre{display:none}
+html[data-theme="light"] .bo-theme-toggle .icone-clair{display:inline}
+
+/* ------------------------------------------------------------------ *
+ * 20. UTILITAIRES + BURGER
+ * ------------------------------------------------------------------ */
+.burger{display:none;background:none;border:1.5px solid var(--encre);border-radius:10px;padding:8px 10px;font-size:18px}
+.nav-mobile{display:none;flex-direction:column;padding:10px 20px 18px;border-top:1px solid var(--ligne);background:var(--papier)}
+.nav-mobile a{padding:11px 6px;font-weight:500;border-bottom:1px solid var(--ligne)}
+.nav-mobile.ouvert{display:flex}
+
+/* ------------------------------------------------------------------ *
+ * 21. RESPONSIVE
+ * ------------------------------------------------------------------ */
+@media (max-width:960px){
+  .hero{grid-template-columns:1fr;gap:32px}
+  .grille-services,.grille-etapes,.grille-real,.grille-temo{grid-template-columns:repeat(2,1fr)}
+  .grille-atouts{grid-template-columns:repeat(2,1fr)}
+  .zone{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .bo-kpis{grid-template-columns:repeat(2,1fr)}
+  .bo-cols{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .nav-desktop,.header-tel{display:none}
+  .burger{display:block}
+  .grille-services,.grille-etapes,.grille-real,.grille-temo,.grille-atouts{grid-template-columns:1fr}
+  .champ-2{grid-template-columns:1fr}
+  .zone,.cta{padding:30px 24px}
+
+  /* Le formulaire de devis doit être visible sans scroll dès le premier écran :
+     réordonné visuellement avant le texte (le H1 reste avant dans le DOM/SEO). */
+  .hero{padding:18px 16px 36px;gap:18px}
+  .devis-carte{order:-1;padding:20px}
+  .devis-carte::before{top:-12px;right:16px;font-size:11px;padding:4px 11px}
+  .hero-sub{margin-top:12px;font-size:16.5px}
+  .hero-points{margin-top:14px;gap:8px}
+  .hero-point{padding:6px 12px;font-size:12px}
+  .hero-cta{margin-top:18px}
+  .devis-carte h2{font-size:19px}
+  .devis-carte > p{margin-bottom:12px}
+  .champ{margin-bottom:9px}
+  .champ input,.champ select,.champ textarea{padding:9px 12px;font-size:14.5px}
+  .champ textarea{min-height:56px}
+  .footer-inner{grid-template-columns:1fr;gap:26px}
+  .wa-infobulle{display:none}
+  .cookies{left:12px;right:12px;bottom:12px;max-width:none}
+  .bo{grid-template-columns:1fr}
+  .bo-sidebar{position:fixed;left:-260px;z-index:100;transition:left var(--tr)}
+  .bo-sidebar.ouvert{left:0}
+  .bo-kpis{grid-template-columns:1fr 1fr}
+}
