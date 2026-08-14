@@ -15,6 +15,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\GalerieController;
 use App\Http\Controllers\CommuneController;
 use App\Http\Controllers\DevisController;
+use App\Http\Controllers\FichierController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RealisationController;
 use App\Http\Controllers\SeoController;
@@ -53,6 +54,13 @@ Route::view('/contact', 'pages.contact')->name('contact');
 Route::view('/a-propos', 'pages.a-propos')->name('a-propos');
 Route::view('/mentions-legales', 'pages.mentions-legales')->name('mentions-legales');
 Route::view('/confidentialite', 'pages.confidentialite')->name('confidentialite');
+
+// Sert les fichiers uploadés faute de lien symbolique storage (voir
+// FichierController). Ne se déclenche que si aucun fichier statique ne
+// répond déjà à cette URL.
+Route::get('/storage/{chemin}', FichierController::class)
+    ->where('chemin', '.*')
+    ->name('storage.fichier');
 
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');

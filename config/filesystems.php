@@ -38,18 +38,22 @@ return [
             'report' => false,
         ],
 
-        // Les fichiers uploadés (photos, vidéo du hero) sont écrits DIRECTEMENT
-        // dans public/storage plutôt que dans storage/app/public.
-        // Raison : l'hébergement mutualisé OVH n'offre pas d'accès SSH, donc
-        // `php artisan storage:link` ne peut pas y créer le lien symbolique
-        // habituel — sans ce réglage, tous les uploads renverraient des 404.
+        // Les fichiers uploadés restent dans storage/app/public, dossier dont
+        // on sait qu'il est inscriptible sur l'hébergement mutualisé (Laravel
+        // y compile déjà les vues). Comme `artisan storage:link` ne peut pas
+        // être lancé sans SSH, ils sont servis par la route « storage.fichier »
+        // (voir routes/web.php) au lieu d'un lien symbolique.
+        //
+        // 'throw' => true : une écriture impossible doit lever une erreur
+        // visible plutôt que d'enregistrer en base un chemin vers un fichier
+        // qui n'existe pas.
         'public' => [
             'driver' => 'local',
-            'root' => public_path('storage'),
+            'root' => storage_path('app/public'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
+            'throw' => true,
+            'report' => true,
         ],
 
         's3' => [

@@ -68,7 +68,7 @@ class ArticleAdminController extends Controller
             'image_une' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
-        $donnees['slug'] = $donnees['slug'] ?: Str::slug($donnees['titre']);
+        $donnees['slug'] = ($donnees['slug'] ?? null) ?: Str::slug($donnees['titre']);
 
         // Un article publié sans date ne remonterait jamais : le scope filtre sur publie_le <= now().
         if ($donnees['statut'] === 'publie' && empty($donnees['publie_le'])) {

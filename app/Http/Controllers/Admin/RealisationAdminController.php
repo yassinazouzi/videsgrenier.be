@@ -77,7 +77,7 @@ class RealisationAdminController extends Controller
             'photo_apres' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
-        $donnees['slug'] = $donnees['slug'] ?: Str::slug($donnees['titre']);
+        $donnees['slug'] = ($donnees['slug'] ?? null) ?: Str::slug($donnees['titre']);
         $donnees['publie'] = $request->boolean('publie');
 
         foreach (['photo_avant', 'photo_apres'] as $champ) {
