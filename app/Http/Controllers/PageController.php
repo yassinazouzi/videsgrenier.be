@@ -36,9 +36,13 @@ class PageController extends Controller
      */
     private function heroPhotos(): array
     {
+        // imagesSeules() : une galerie peut contenir des vidéos, mais le fond
+        // du hero est un diaporama d'images — une vidéo y serait utilisée
+        // comme background-image et n'afficherait rien.
         $manuelles = Galerie::where('slug', self::GALERIE_HERO_SLUG)
             ->first()
             ?->photos()
+            ->imagesSeules()
             ->orderBy('ordre')
             ->pluck('url')
             ->all();

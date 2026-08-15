@@ -97,7 +97,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('temoignages', TemoignageAdminController::class)->except('show');
         Route::resource('articles', ArticleAdminController::class)->except('show');
 
-        Route::resource('galeries', GalerieAdminController::class)->except('show');
+        // parameters() est indispensable ici : Laravel singularise « galeries »
+        // en « galery » (règle anglaise -ies → -y), ce qui ne correspond pas au
+        // paramètre $galerie du contrôleur. Sans ça, le liage de route échoue
+        // en silence et l'écran d'édition affiche une galerie vide.
+        Route::resource('galeries', GalerieAdminController::class)
+            ->parameters(['galeries' => 'galerie'])
+            ->except('show');
         Route::post('galeries/{galerie}/photos', [GalerieAdminController::class, 'ajouterPhotos'])->name('galeries.photos.ajouter');
         Route::put('galeries/{galerie}/photos', [GalerieAdminController::class, 'majPhotos'])->name('galeries.photos.maj');
         Route::delete('galeries/{galerie}/photos/{photo}', [GalerieAdminController::class, 'supprimerPhoto'])->name('galeries.photos.supprimer');

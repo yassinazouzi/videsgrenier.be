@@ -64,7 +64,16 @@ class GalerieAdminController extends Controller
     {
         $request->validate([
             'photos' => ['required', 'array', 'max:30'],
-            'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            // Images et vidéos acceptées dans une même galerie. La limite de
+            // taille est plus haute pour les vidéos, forcément plus lourdes.
+            'photos.*' => [
+                'file',
+                'mimetypes:image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime',
+                'max:51200',
+            ],
+        ], [
+            'photos.*.mimetypes' => 'Formats acceptés : JPG, PNG, WebP pour les photos, MP4, WebM ou MOV pour les vidéos.',
+            'photos.*.max' => 'Chaque fichier doit faire moins de 50 Mo.',
         ]);
 
         $ordre = (int) $galerie->photos()->max('ordre');
@@ -81,7 +90,7 @@ class GalerieAdminController extends Controller
         }
 
         return redirect()->route('admin.galeries.edit', $galerie)
-            ->with('succes', count($request->file('photos')).' photo(s) ajoutée(s).');
+            ->with('succes', count($request->file('photos')).' fichier(s) ajouté(s).');
     }
 
     public function majPhotos(Request $request, Galerie $galerie)

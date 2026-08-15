@@ -17,8 +17,14 @@
     <div class="grille-real">
       @foreach($galerie->photos as $photo)
         <figure class="real">
-          <img src="{{ asset($photo->url) }}" alt="{{ $photo->alt }}" loading="lazy"
-               style="width:100%;height:220px;object-fit:cover">
+          @if($photo->estVideo())
+            <video src="{{ asset($photo->url) }}" controls preload="metadata" playsinline
+                   style="width:100%;height:220px;object-fit:cover;background:#000"
+                   aria-label="{{ $photo->alt }}"></video>
+          @else
+            <img src="{{ asset($photo->url) }}" alt="{{ $photo->alt }}" loading="lazy"
+                 style="width:100%;height:220px;object-fit:cover">
+          @endif
         </figure>
       @endforeach
     </div>

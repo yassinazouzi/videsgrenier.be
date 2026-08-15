@@ -60,12 +60,14 @@
 
 @if($galerie->exists)
   <div class="bo-panneau" style="margin-top:20px">
-    <div class="bo-panneau-tete"><h3>Ajouter des photos</h3></div>
+    <div class="bo-panneau-tete"><h3>Ajouter des photos ou des vidéos</h3></div>
     <form method="POST" enctype="multipart/form-data" action="{{ route('admin.galeries.photos.ajouter', $galerie) }}">
       @csrf
       <div class="bo-champ">
-        <label for="photos">Sélection multiple (30 fichiers max, 5 Mo chacun)</label>
-        <input type="file" id="photos" name="photos[]" multiple required accept="image/jpeg,image/png,image/webp">
+        <label for="photos">Sélection multiple (30 fichiers max, 50 Mo chacun)</label>
+        <input type="file" id="photos" name="photos[]" multiple required
+               accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime">
+        <span class="sous">Photos : JPG, PNG, WebP · Vidéos : MP4, WebM, MOV</span>
       </div>
       <button type="submit" class="bo-btn bo-btn-cobalt">Téléverser</button>
     </form>
@@ -73,27 +75,47 @@
 
   <div class="bo-panneau">
     <div class="bo-panneau-tete">
-      <h3>Photos ({{ $galerie->photos->count() }})</h3>
+      <h3>Contenu de la galerie ({{ $galerie->photos->count() }})</h3>
     </div>
 
     @if($galerie->photos->isEmpty())
-      <p class="muet">Aucune photo pour l’instant.</p>
+      <p class="muet">Aucun média pour l’instant.</p>
     @else
-      <form method="POST" action="{{ route('admin.galeries.photos.maj', $galerie) }}">
+      <p class="sous" style="margin-bottom:14px">
+        Glissez les lignes par la poignée <strong>⠿</strong> pour changer l’ordre d’affichage,
+        puis enregistrez. L’ordre défini ici est celui vu par les visiteurs.
+      </p>
+
+      <form method="POST" action="{{ route('admin.galeries.photos.maj', $galerie) }}" id="form-medias">
         @csrf @method('PUT')
-        <table class="bo-table">
-          <thead><tr><th>Aperçu</th><th>Texte alternatif (SEO images)</th><th>Ordre</th><th></th></tr></thead>
-          <tbody>
+        <table class="bo-table" id="table-medias">
+          <thead>
+            <tr><th style="width:34px"></th><th>Aperçu</th><th>Type</th><th>Texte alternatif (SEO)</th><th></th></tr>
+          </thead>
+          <tbody id="corps-medias">
             @foreach($galerie->photos as $photo)
-              <tr>
-                <td><img src="{{ asset($photo->url) }}" alt="" style="width:84px;height:56px;object-fit:cover;border-radius:6px"></td>
+              <tr draggable="true" data-id="{{ $photo->id }}">
+                <td class="poignee" style="cursor:grab;text-align:center;font-size:18px;color:var(--bo-texte-2)"
+                    title="Glisser pour réordonner">⠿</td>
+                <td>
+                  @if($photo->estVideo())
+                    <video src="{{ asset($photo->url) }}" muted preload="metadata"
+                           style="width:84px;height:56px;object-fit:cover;border-radius:6px;background:#000"></video>
+                  @else
+                    <img src="{{ asset($photo->url) }}" alt=""
+                         style="width:84px;height:56px;object-fit:cover;border-radius:6px">
+                  @endif
+                </td>
+                <td>
+                  <span class="badge {{ $photo->estVideo() ? 'badge-contacte' : 'badge-nouveau' }}">
+                    {{ $photo->estVideo() ? 'Vidéo' : 'Photo' }}
+                  </span>
+                </td>
                 <td>
                   <input type="text" name="photos[{{ $photo->id }}][alt]" value="{{ $photo->alt }}"
                          style="width:100%;background:var(--bo-fond);border:1px solid var(--bo-ligne);border-radius:8px;padding:8px 10px;color:var(--bo-texte)">
-                </td>
-                <td>
-                  <input type="number" name="photos[{{ $photo->id }}][ordre]" value="{{ $photo->ordre }}" min="0"
-                         style="width:80px;background:var(--bo-fond);border:1px solid var(--bo-ligne);border-radius:8px;padding:8px 10px;color:var(--bo-texte)">
+                  {{-- Rempli par le glisser-déposer ; reste correct sans JavaScript. --}}
+                  <input type="hidden" name="photos[{{ $photo->id }}][ordre]" value="{{ $photo->ordre }}" class="champ-ordre">
                 </td>
                 <td>
                   <button type="submit" form="suppr-{{ $photo->id }}" class="bo-btn bo-btn-sm bo-btn-danger">Suppr.</button>
@@ -102,17 +124,58 @@
             @endforeach
           </tbody>
         </table>
-        <button type="submit" class="bo-btn bo-btn-cobalt" style="margin-top:16px">Enregistrer les photos</button>
+        <button type="submit" class="bo-btn bo-btn-cobalt" style="margin-top:16px">Enregistrer l’ordre et les textes</button>
       </form>
 
       {{-- Formulaires de suppression hors du formulaire principal : un form ne peut pas en contenir un autre. --}}
       @foreach($galerie->photos as $photo)
         <form id="suppr-{{ $photo->id }}" method="POST"
               action="{{ route('admin.galeries.photos.supprimer', [$galerie, $photo]) }}"
-              onsubmit="return confirm('Supprimer cette photo ?')">
+              onsubmit="return confirm('Supprimer ce média ?')">
           @csrf @method('DELETE')
         </form>
       @endforeach
+
+      <script>
+      (function () {
+        var corps = document.getElementById('corps-medias');
+        if (!corps) return;
+        var ligneTiree = null;
+
+        function renumeroter() {
+          corps.querySelectorAll('tr').forEach(function (tr, index) {
+            var champ = tr.querySelector('.champ-ordre');
+            if (champ) champ.value = index + 1;
+          });
+        }
+
+        corps.addEventListener('dragstart', function (e) {
+          var tr = e.target.closest('tr');
+          if (!tr) return;
+          ligneTiree = tr;
+          tr.style.opacity = '.4';
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        corps.addEventListener('dragend', function () {
+          if (ligneTiree) ligneTiree.style.opacity = '';
+          ligneTiree = null;
+          renumeroter();
+        });
+
+        corps.addEventListener('dragover', function (e) {
+          e.preventDefault();
+          var cible = e.target.closest('tr');
+          if (!cible || !ligneTiree || cible === ligneTiree) return;
+
+          // Insère avant ou après selon que le curseur est au-dessus ou
+          // au-dessous du milieu de la ligne survolée.
+          var rect = cible.getBoundingClientRect();
+          var apres = (e.clientY - rect.top) > (rect.height / 2);
+          corps.insertBefore(ligneTiree, apres ? cible.nextSibling : cible);
+        });
+      })();
+      </script>
     @endif
   </div>
 @endif
