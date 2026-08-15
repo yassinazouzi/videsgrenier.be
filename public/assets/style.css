@@ -126,6 +126,13 @@ header{position:sticky;top:0;z-index:50;background:rgba(246,245,241,.92);backdro
 .devis-carte h2{font-size:22px;margin-bottom:4px}
 .devis-carte > p{font-size:14px;color:var(--gris);margin-bottom:18px}
 
+/* Bascule mobile : le bouton n'est démasqué que par le JavaScript sous
+   720px (voir layouts/site.blade.php). Sur desktop et sans JavaScript,
+   le formulaire reste affiché en permanence. */
+.devis-bascule{margin-bottom:4px;font-size:16px;padding:14px 20px}
+.devis-bascule[hidden]{display:none}
+.devis-corps[hidden]{display:none}
+
 /* ------------------------------------------------------------------ *
  * 8. CHAMPS DE FORMULAIRE
  * ------------------------------------------------------------------ */

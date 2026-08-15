@@ -80,11 +80,7 @@
       </div>
     </div>
 
-    <div class="devis-carte" id="devis">
-      <h2>Votre devis en 2 min</h2>
-      <p>Réponse sous 24h, sans engagement.</p>
-      @include('partials.form-devis')
-    </div>
+    @include('partials.carte-devis')
   </section>
 </section>
 

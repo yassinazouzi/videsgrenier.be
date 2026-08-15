@@ -40,11 +40,12 @@
     </div>
   </div>
 
-  <div class="devis-carte" id="devis">
-    <h2>Devis gratuit</h2>
-    <p>Réponse sous 24h.</p>
-    @include('partials.form-devis', ['prestationPreselect' => $service->titre, 'communes' => $communes])
-  </div>
+  @include('partials.carte-devis', [
+      'titre' => 'Devis gratuit',
+      'sousTitre' => 'Réponse sous 24h.',
+      'prestationPreselect' => $service->titre,
+      'communes' => $communes,
+  ])
 </section>
 
 @if($service->contenu)

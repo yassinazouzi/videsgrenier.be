@@ -56,11 +56,10 @@
     </div>
   </div>
 
-  <div class="devis-carte" id="devis">
-    <h2>Devis à {{ $commune->nom }}</h2>
-    <p>Réponse sous 24h, sans engagement.</p>
-    @include('partials.form-devis', ['communePreselect' => $commune->nom])
-  </div>
+  @include('partials.carte-devis', [
+      'titre' => 'Devis à '.$commune->nom,
+      'communePreselect' => $commune->nom,
+  ])
 </section>
 
 @if($commune->intro)

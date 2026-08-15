@@ -124,6 +124,70 @@ document.querySelector('.burger')?.addEventListener('click', function () {
 document.querySelector('.wa-infobulle .fermer')?.addEventListener('click', function () {
   this.closest('.wa-infobulle').remove();
 });
+
+// Formulaire de devis replié derrière un bouton sur mobile : il occupait
+// tout le premier écran et repoussait l'argumentaire hors de vue.
+(function () {
+  var SEUIL_MOBILE = 720;
+  var carte = document.querySelector('.devis-repliable');
+  if (!carte) return;
+
+  var bascule = carte.querySelector('.devis-bascule');
+  var corps = carte.querySelector('.devis-corps');
+  if (!bascule || !corps) return;
+
+  function estMobile() { return window.innerWidth <= SEUIL_MOBILE; }
+
+  function ouvrir(defilerVers) {
+    carte.classList.add('ouvert');
+    corps.hidden = false;
+    bascule.setAttribute('aria-expanded', 'true');
+    bascule.textContent = 'Masquer le formulaire';
+    if (defilerVers) {
+      corps.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function replier() {
+    carte.classList.remove('ouvert');
+    corps.hidden = true;
+    bascule.setAttribute('aria-expanded', 'false');
+    bascule.textContent = 'Demander mon devis gratuit';
+  }
+
+  function appliquer() {
+    if (estMobile()) {
+      bascule.hidden = false;
+      // Un formulaire déjà rempli (erreur de validation renvoyée par le
+      // serveur) doit rester ouvert, sinon le visiteur perd ses saisies.
+      if (carte.querySelector('.champ [role="alert"], [role="alert"]')) {
+        ouvrir(false);
+      } else if (!carte.classList.contains('ouvert')) {
+        replier();
+      }
+    } else {
+      bascule.hidden = true;
+      corps.hidden = false;
+    }
+  }
+
+  bascule.addEventListener('click', function () {
+    carte.classList.contains('ouvert') ? replier() : ouvrir(true);
+  });
+
+  // Les liens « Demander un devis » pointent vers #devis : sur mobile,
+  // ils doivent déplier le formulaire plutôt que sauter sur un bloc replié.
+  document.querySelectorAll('a[href$="#devis"]').forEach(function (lien) {
+    lien.addEventListener('click', function () {
+      if (estMobile()) ouvrir(true);
+    });
+  });
+
+  if (window.location.hash === '#devis') ouvrir(false);
+
+  appliquer();
+  window.addEventListener('resize', appliquer);
+})();
 </script>
 @stack('scripts')
 </body>
